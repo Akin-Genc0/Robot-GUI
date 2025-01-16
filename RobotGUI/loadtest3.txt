@@ -1,0 +1,5 @@
+Arena Dimensions: 400.000000 x 500.000000
+
+Robot ID: 0 at (311.0, 308.1), Radius: 10.0, Speed: 1.0, Angle: 133.4
+Robot ID: 1 at (257.0, 250.0), Radius: 10.0, Speed: 1.0, Angle: 0.0
+Obstacle at (342.0, 470.1), Radius: 20.0
