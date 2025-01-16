@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -36,6 +37,8 @@ public class RobotInterface extends Application {
 	private VBox rtPane;										// vertical box for putting info
 	private RobotArena arena;
 	private UserControlledRobot  userControlledRobot ;
+	private ArenaSizeAdjuster sizeAdjuster;
+
 
 	/**
 	 * function to show in a box ABout the programme
@@ -202,7 +205,8 @@ public class RobotInterface extends Application {
 	    });
 
 	    
-	   
+	    
+	    
 	    
 	    Button btnUserRobot = new Button("UserControledRobot");				// now button for stop
 	    btnUserRobot.setOnAction(new EventHandler<ActionEvent>() {
@@ -226,14 +230,49 @@ public class RobotInterface extends Application {
 	    });
 	    
 	    
-												// now add these buttons + labels to a HBox
+	    TextField widthField = new TextField();
+	    widthField.setPromptText("Enter new width");
+
+	    TextField heightField = new TextField();
+	    heightField.setPromptText("Enter new height");
+	    Button btnResizeArena = new Button("Resize Arena");
+	    
+	    
+	    btnResizeArena.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	            try {
+	                // Parse the new width and height from the TextFields
+	                double newWidth = Double.parseDouble(widthField.getText());
+	                double newHeight = Double.parseDouble(heightField.getText());
+
+	                // Adjust the arena size using the setArenaSize method
+	                arena.setArenaSize(newWidth, newHeight);
+
+	                // Redraw the world after resizing the arena
+	                drawWorld();  // Make sure to redraw the world after resizing
+	                System.out.println("Arena resized to: " + newWidth + " x " + newHeight);
+	            } catch (NumberFormatException e) {
+	                System.out.println("Please enter valid numerical values for width and height.");
+	            }
+	        }
+	    });	
+	    
+	    // Add the resize controls at the bottom of the BorderPane
+	    HBox resizeControls = new HBox(5, widthField, heightField, btnResizeArena);
+	  
 	    HBox rowRun = new HBox(5, 
 		        new Label("Run: "), 
 		        btnStart, 
 		        btnStop,
 		        btnToggleMaze
+		       
 		    );
-		    
+	    HBox rowArena = new HBox(5, 
+		        new Label("Change: "), 
+		        btnResizeArena,
+		        resizeControls
+		    );
 		    // Middle row: add robots/obstacles
 		    HBox rowAdd = new HBox(5, 
 		        new Label("Add: "), 
@@ -245,10 +284,12 @@ public class RobotInterface extends Application {
 		        btnUserRobot
 		    );
 		    
+		    
+		    
 		  
 
 		    // Put everything in a VBox
-		    VBox vbox = new VBox(10, rowRun, rowAdd);
+		    VBox vbox = new VBox(10, rowArena, rowRun, rowAdd);
 		    vbox.setAlignment(Pos.CENTER_LEFT);
 
 		    return vbox;
@@ -306,6 +347,8 @@ public class RobotInterface extends Application {
 	    root.getChildren().add(canvas);
 	    bp.setLeft(root);  // load canvas to left area
 
+ 
+	    
 	    mc = new MyCanvas(canvas.getGraphicsContext2D(), 600, 500);
 
 	    timer = new AnimationTimer() {  // set up timer
