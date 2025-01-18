@@ -37,6 +37,7 @@ public class RobotInterface extends Application {
 	private VBox rtPane;										// vertical box for putting info
 	private RobotArena arena;
 	private UserControlledRobot  userControlledRobot ;
+	private KillerRobot   killerRobot;
 	private ArenaSizeAdjuster sizeAdjuster;
 
 
@@ -213,6 +214,7 @@ public class RobotInterface extends Application {
 	        @Override
 	        public void handle(ActionEvent event) {
 	        	 userControlledRobot = new UserControlledRobot(100, 100, 10, 1, 1);
+	        	
 	            
 	            // Add the robot to the arena
 	        	 arena.addRobott(userControlledRobot);
@@ -228,6 +230,17 @@ public class RobotInterface extends Application {
 	            drawWorld();  // Redraw the world with the new layout
 	        }
 	    });
+	    
+	    Button btnKillerRobot = new Button("Killer Robot");
+	    btnKillerRobot.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	        	killerRobot = new KillerRobot(100, 106, 12, 10, 1);
+	        	 arena.addRobott(killerRobot);
+	             drawWorld();  // Redraw to show the new 
+	        }
+	    });
+	    
 	    
 	    
 	    TextField widthField = new TextField();
@@ -281,6 +294,7 @@ public class RobotInterface extends Application {
 		        btnAddOps,
 		        btnSave, 
 		        btnLoad, 
+		        btnKillerRobot,
 		        btnUserRobot
 		    );
 		    
@@ -329,9 +343,7 @@ public class RobotInterface extends Application {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see javafx.application.Application#start(javafx.stage.Stage)
-	 */
+	
  
 	@Override
 	public void start(Stage primaryStage) throws Exception {

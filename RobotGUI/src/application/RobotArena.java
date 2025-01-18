@@ -205,6 +205,12 @@ public class RobotArena {
 	    return String.format("Arena Dimensions: %f x %f%n", xSize, ySize);
 	         
 	}
+
+    public void removeRobot(Robot robot) {
+        allRobots.remove(robot);
+        System.out.println("Robot " + robot.getID() + " has been removed from the arena.");
+    }
+
     
     
 }
