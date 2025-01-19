@@ -41,6 +41,15 @@ public class BasicRobot extends Robot {
         rightSensorLine = new Line(x, y, rightX2, rightY2);
     }
 
+    
+    
+    public boolean contains(double mouseX, double mouseY) {
+        double distance = Math.sqrt(Math.pow(this.x - mouseX, 2) + Math.pow(this.y - mouseY, 2));
+        return distance <= this.rad;  // If mouse is within the robot's radius
+    }
+
+    
+    
     @Override
     public void drawRobot(MyCanvas mc) {
         // 1. Draw the main body

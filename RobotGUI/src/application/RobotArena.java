@@ -123,6 +123,7 @@ public class RobotArena {
                 }
             }
         }
+             
     }
 
 
@@ -210,6 +211,10 @@ public class RobotArena {
         allRobots.remove(robot);
         System.out.println("Robot " + robot.getID() + " has been removed from the arena.");
     }
+	public void removeObstacle(Obstacle selectedObstacle) {
+		// TODO Auto-generated method stub
+		
+	}
 
     
     

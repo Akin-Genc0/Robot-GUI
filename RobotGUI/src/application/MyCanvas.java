@@ -51,6 +51,8 @@ public class MyCanvas {
                 return Color.YELLOW;
             case 'w':
                 return Color.WHITE;
+            case 'o':
+                return Color.PURPLE;
             default:
                 return Color.BLACK;
         }

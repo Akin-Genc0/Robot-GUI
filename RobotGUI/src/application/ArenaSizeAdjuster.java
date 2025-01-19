@@ -13,6 +13,6 @@ public class ArenaSizeAdjuster {
         // Adjust the size of the arena
         arena.setArenaSize(newWidth, newHeight);
         
-        // After resizing, you may want to re-adjust robots or obstacles based on new arena size
+       
     }
 }

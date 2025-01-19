@@ -19,7 +19,8 @@ public abstract class Robot {
 	}
  
 	
- 
+	 
+
 	public double getX() { return x; }
 	/**
 	 * return y position
@@ -62,6 +63,10 @@ public abstract class Robot {
 
 	
 
+	public boolean contains(double mouseX, double mouseY) {
+	    double distance = Math.sqrt(Math.pow(this.x - mouseX, 2) + Math.pow(this.y - mouseY, 2));
+	    return distance <= this.rad;  // Check if mouse click is within the robot's radius
+	}
 
 
 	protected abstract String getStrType();

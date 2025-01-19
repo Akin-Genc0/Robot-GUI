@@ -205,9 +205,7 @@ public class RobotInterface extends Application {
 	        }
 	    });
 
-	    
-	    
-	    
+
 	    
 	    Button btnUserRobot = new Button("UserControledRobot");				// now button for stop
 	    btnUserRobot.setOnAction(new EventHandler<ActionEvent>() {
@@ -241,6 +239,19 @@ public class RobotInterface extends Application {
 	        }
 	    });
 	    
+	    
+	    
+	    Button btnAddTeleportingRobot = new Button("Add Teleporting Robot");
+	    btnAddTeleportingRobot.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	            // Create a new TeleportingRobot instance and add it to the arena
+	            TeleportingRobot teleportingRobot = new TeleportingRobot(100, 100, 10, 0, 1); // Adjust coordinates, radius, angle, and speed as needed
+	            arena.addRobott(teleportingRobot);  // Add the teleporting robot to the arena
+	            drawWorld();  // Redraw the world to show the new robot
+	        }
+	    });
+
 	    
 	    
 	    TextField widthField = new TextField();
@@ -278,13 +289,16 @@ public class RobotInterface extends Application {
 		        new Label("Run: "), 
 		        btnStart, 
 		        btnStop,
-		        btnToggleMaze
+		        btnToggleMaze,
+		        btnAddTeleportingRobot
+		         
 		       
 		    );
 	    HBox rowArena = new HBox(5, 
 		        new Label("Change: "), 
 		        btnResizeArena,
 		        resizeControls
+		      
 		    );
 		    // Middle row: add robots/obstacles
 		    HBox rowAdd = new HBox(5, 
@@ -296,6 +310,8 @@ public class RobotInterface extends Application {
 		        btnLoad, 
 		        btnKillerRobot,
 		        btnUserRobot
+		       
+		        
 		    );
 		    
 		    

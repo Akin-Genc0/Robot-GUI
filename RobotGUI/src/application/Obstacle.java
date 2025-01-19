@@ -50,6 +50,10 @@ public class Obstacle {
     public String getInfo() {
         return " (" + x + ", " + y + ")";  
     }
+	public boolean contains(double x2, double y2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
    
 
 
