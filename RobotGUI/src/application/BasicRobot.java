@@ -1,5 +1,9 @@
 package application;
 
+/**
+ * Represents a Basic Robot that moves within the arena, has sensors to detect obstacles,
+ * and can adjust its behavior based on sensor inputs.
+ */
 public class BasicRobot extends Robot {
     // Wheel-based movement
     protected double leftWheelSpeed;
@@ -14,6 +18,15 @@ public class BasicRobot extends Robot {
     private boolean leftSensorTriggered = false;
     private boolean rightSensorTriggered = false;
 
+    /**
+     * Constructs a BasicRobot with initial position, radius, angle, and speed.
+     * 
+     * @param ix The initial x-coordinate.
+     * @param iy The initial y-coordinate.
+     * @param ir The radius of the robot.
+     * @param angle The initial angle of the robot.
+     * @param speed The speed of the robot.
+     */
     BasicRobot(double ix, double iy, double ir, double angle, double speed) {
         super(ix, iy, ir);
 
@@ -25,9 +38,8 @@ public class BasicRobot extends Robot {
         this.turningSpeed    = 0;
 
         // Create the sensors. For demonstration, 40 px length each
-       
         double sensorLength = 40;
-        
+
         // Left sensor angle
         double leftSensorAngle  = Math.toRadians(bAngle - 30);
         double leftX2  = x + sensorLength * Math.cos(leftSensorAngle);
@@ -41,21 +53,29 @@ public class BasicRobot extends Robot {
         rightSensorLine = new Line(x, y, rightX2, rightY2);
     }
 
-    
-    
+    /**
+     * Checks if the robot's position contains the mouse coordinates (for selection).
+     * 
+     * @param mouseX The x-coordinate of the mouse.
+     * @param mouseY The y-coordinate of the mouse.
+     * @return True if the mouse is within the robot's radius, false otherwise.
+     */
     public boolean contains(double mouseX, double mouseY) {
         double distance = Math.sqrt(Math.pow(this.x - mouseX, 2) + Math.pow(this.y - mouseY, 2));
         return distance <= this.rad;  // If mouse is within the robot's radius
     }
 
-    
-    
+    /**
+     * Draws the robot on the canvas.
+     * 
+     * @param mc The MyCanvas object to draw the robot.
+     */
     @Override
     public void drawRobot(MyCanvas mc) {
         // 1. Draw the main body
         mc.showCircle(x, y, rad, col);
 
-        
+        // Optional wheel controls
         double wheelRadius = rad / 3;      
         double wheelOffset = rad * 1.2;  
 
@@ -84,6 +104,13 @@ public class BasicRobot extends Robot {
         mc.showLine(rightCoords[0], rightCoords[1], rightCoords[2], rightCoords[3], rightColor);
     }
 
+    /**
+     * Moves the robot within the arena and checks for wall collisions.
+     * If a collision is detected, the robot will turn to avoid the obstacle.
+     * 
+     * @param xLimit The limit for the x-coordinate (arena width).
+     * @param yLimit The limit for the y-coordinate (arena height).
+     */
     @Override
     public void move(double xLimit, double yLimit) {
         // turning
@@ -115,6 +142,11 @@ public class BasicRobot extends Robot {
         clampPosition(xLimit, yLimit);
     }
 
+    /**
+     * Adjusts the robot's behavior based on its interaction with other robots and obstacles.
+     * 
+     * @param r The RobotArena instance where the robot is located.
+     */
     @Override
     protected void adjustRobot(RobotArena r) {
         // Update lines again so they're fresh
@@ -141,7 +173,6 @@ public class BasicRobot extends Robot {
         }
 
         // 2. For each sensor, check if it sees an obstacle
-      
         for (Obstacle obs : r.getObstacles()) {
             // If your Line class has a intersectsCircle(cx, cy, r) method, call it:
             if (leftSensorLine.intersectsCircle(obs.getX(), obs.getY(), obs.getRadius())) {
@@ -158,8 +189,12 @@ public class BasicRobot extends Robot {
         }
     }
 
-
-    // Helper to keep the robot in the arena
+    /**
+     * Keeps the robot within the arena boundaries.
+     * 
+     * @param xLimit The limit for the x-coordinate (arena width).
+     * @param yLimit The limit for the y-coordinate (arena height).
+     */
     protected void clampPosition(double xLimit, double yLimit) {
         if (x - rad < 0)       x = rad;
         if (x + rad > xLimit)  x = xLimit - rad;
@@ -167,7 +202,9 @@ public class BasicRobot extends Robot {
         if (y + rad > yLimit)  y = yLimit - rad;
     }
 
-    // Recalculates both sensor lines based on bAngle
+    /**
+     * Recalculates both sensor lines based on the robot's angle.
+     */
     private void updateSensorLines() {
         double sensorLength = 40;
         // Left sensor at bAngle - 30
@@ -185,6 +222,11 @@ public class BasicRobot extends Robot {
 
     /**
      * Check if a given sensor line intersects with any arena boundary.
+     * 
+     * @param sensor The sensor line to check.
+     * @param xLimit The limit for the x-coordinate (arena width).
+     * @param yLimit The limit for the y-coordinate (arena height).
+     * @return True if the sensor line intersects any wall, false otherwise.
      */
     private boolean sensorSeesWall(Line sensor, double xLimit, double yLimit) {
         Line topWall    = new Line(0,       0,       xLimit, 0);
@@ -199,14 +241,17 @@ public class BasicRobot extends Robot {
 
         return false;
     }
-    
- 
 
     // Optional wheel controls
     public void turnLeft()  { leftWheelSpeed  = 0.5; rightWheelSpeed = 1.5; }
     public void turnRight() { leftWheelSpeed  = 1.5; rightWheelSpeed = 0.5; }
     public void goStraight(){ leftWheelSpeed  = 1.0; rightWheelSpeed = 1.0; }
 
+    /**
+     * Returns the string representing the robot's type.
+     * 
+     * @return A string representing the robot type ("BasicRobot").
+     */
     protected String getStrType() { 
         return "BasicRobot"; 
     }

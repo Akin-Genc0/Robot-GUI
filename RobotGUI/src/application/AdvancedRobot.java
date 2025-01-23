@@ -1,14 +1,32 @@
 package application;
 
+/**
+ * Represents an advanced robot that inherits from BasicRobot.
+ * This robot has enhanced movement capabilities and displays wheels based on its movement.
+ */
 public class AdvancedRobot extends BasicRobot {
 
+    /**
+     * Constructor for the AdvancedRobot.
+     * 
+     * @param ix Initial x-coordinate.
+     * @param iy Initial y-coordinate.
+     * @param ir Initial radius of the robot.
+     * @param i Initial angle of the robot.
+     * @param j Initial speed of the robot.
+     */
     AdvancedRobot(double ix, double iy, double ir, int i, int j) {
         super(ix, iy, ir, i, j);  // Call the constructor of BasicRobot
 
         // Change the color of the robot to indicate it's an advanced version
-        this.col = 'g';  // You can choose any color here (e.g., 'g' for green)
+        this.col = 'g';   
     }
 
+    /**
+     * Draws the robot on the canvas, including its main body and wheels.
+     * 
+     * @param mc The MyCanvas object used to draw the robot.
+     */
     @Override
     public void drawRobot(MyCanvas mc) {
         // Draw the main body of the robot
@@ -33,6 +51,13 @@ public class AdvancedRobot extends BasicRobot {
         mc.showCircle(rightWheelX, rightWheelY, wheelRadius, 'b'); // Right wheel
     }
 
+    /**
+     * Moves the robot based on the movement of its left and right wheels.
+     * If the robot detects an obstacle, it will turn to avoid it.
+     * 
+     * @param xLimit The maximum x-coordinate boundary.
+     * @param yLimit The maximum y-coordinate boundary.
+     */
     @Override
     public void move(double xLimit, double yLimit) {
         // Move according to left and right wheel speeds
@@ -60,7 +85,13 @@ public class AdvancedRobot extends BasicRobot {
         clampPosition(xLimit, yLimit);
     }
 
-    // Helper to check if the robot is about to bump into something (simple bump sensors)
+    /**
+     * Helper method to check if the robot is about to bump into something (simple bump sensors).
+     * 
+     * @param xLimit The maximum x-coordinate boundary.
+     * @param yLimit The maximum y-coordinate boundary.
+     * @return true if the robot detects a collision, false otherwise.
+     */
     public boolean sensorSeesObstacle(double xLimit, double yLimit) {
         // Simple bump sensor: checks if the robot hits the arena boundaries
         if (x - rad < 0 || x + rad > xLimit || y - rad < 0 || y + rad > yLimit) {
@@ -69,6 +100,11 @@ public class AdvancedRobot extends BasicRobot {
         return false;
     }
 
+    /**
+     * Adjusts the robot's angle and position if there’s a collision with the boundary or another robot.
+     * 
+     * @param r The RobotArena object that contains all the robots and obstacles.
+     */
     @Override
     protected void adjustRobot(RobotArena r) {
         // Adjust angle and position if there’s a collision with boundary or robot
@@ -80,12 +116,22 @@ public class AdvancedRobot extends BasicRobot {
         y += bSpeed * Math.sin(radAngle);
     }
 
-    // Use "AdvancedRobot" to differentiate from BasicRobot
+    /**
+     * Returns the string representation of the robot type.
+     * 
+     * @return A string indicating this is an "AdvancedRobot".
+     */
+    @Override
     protected String getStrType() {
         return "AdvancedRobot"; 
     }
 
-    // Helper to keep the robot in the arena
+    /**
+     * Ensures that the robot stays within the boundaries of the arena.
+     * 
+     * @param xLimit The maximum x-coordinate boundary.
+     * @param yLimit The maximum y-coordinate boundary.
+     */
     protected void clampPosition(double xLimit, double yLimit) {
         if (x - rad < 0)       x = rad;
         if (x + rad > xLimit)  x = xLimit - rad;

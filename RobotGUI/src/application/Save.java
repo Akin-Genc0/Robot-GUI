@@ -4,16 +4,24 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Class responsible for saving and loading the arena, robots, and obstacles to/from a file.
+ */
 public class Save {
     private RobotArena arena;
 
-    // Constructor to pass the RobotArena instance
+    /**
+     * Constructor to initialize the Save object with a RobotArena instance.
+     * 
+     * @param arena The RobotArena instance to be saved or loaded.
+     */
     public Save(RobotArena arena) {
-    	
-    	
         this.arena = arena;
     }
 
+    /**
+     * Saves the current state of the arena, including all robots and obstacles, to a text file.
+     */
     public void SaveArena() {
         TextFile tf = new TextFile("Text files", "txt");  // Create a TextFile object to handle saving as a txt file
 
@@ -52,6 +60,9 @@ public class Save {
         tf.closeWriteFile();  // Close the file after writing everything
     }
      
+    /**
+     * Loads the arena, robots, and obstacles from a saved file and updates the current arena state.
+     */
     public void loadArena() {
         TextFile tf = new TextFile("Text files", "txt"); // Your file chooser/creator
 
@@ -83,16 +94,12 @@ public class Save {
                     
                     // --- Parse Robot ---
                     if (line.startsWith("Robot ID:")) {
-                       
                         String[] parts = line.split(",");
 
                         // Extract the ID, X, Y from the first part
-                        // "Robot ID: 0 at (105.8, 222.6)"
                         String firstPart = parts[0].trim(); // "Robot ID: 0 at (105.8, 222.6)"
-                        // Remove "Robot ID:"
                         firstPart = firstPart.replace("Robot ID:", "").trim();  // "0 at (105.8, 222.6)"
                         
-                        // Split at " at "
                         String[] idAndCoords = firstPart.split("at");
                         String idString = idAndCoords[0].trim();    // "0"
                         String coords = idAndCoords[1].trim();      // "(105.8, 222.6)"
@@ -101,7 +108,6 @@ public class Save {
                         
                         // coords = "(105.8, 222.6)" -> remove parentheses
                         coords = coords.replace("(", "").replace(")", "").trim();
-                        // "105.8, 222.6"
                         String[] xyParts = coords.split(",");
                         double rx = Double.parseDouble(xyParts[0].trim());
                         double ry = Double.parseDouble(xyParts[1].trim());
@@ -114,15 +120,10 @@ public class Save {
                         double angle = Double.parseDouble(parts[3].replace("Angle:", "").trim());
 
                         // We can create a BasicRobot (or whichever type you want).
-                        // BasicRobot constructor example: BasicRobot(double x, double y, double r, double angle, double speed)
                         Robot newRobot = new BasicRobot(rx, ry, radius, angle, speed);
 
                         // If you want to preserve the ID from file, you can manually set it,
                         // but your Robot class automatically increments ID in its constructor.
-                        // For demonstration, we'll ignore the "robotID" from file except to confirm it's read.
-                        // If you do need to keep the exact ID, you'd have to modify your Robot class.
-
-                        // Add to arena
                         arena.addRobott(newRobot);
                     }
                     
@@ -131,7 +132,7 @@ public class Save {
                         // Example:
                         // "Obstacle at (105.8, 222.6), Radius: 10.0"
                         
-                        // Let's isolate coordinates first: everything inside "(...)"
+                        // Isolate coordinates first: everything inside "(...)"
                         int openParen = line.indexOf("(");
                         int closeParen = line.indexOf(")");
                         
@@ -142,7 +143,6 @@ public class Save {
                             double oy = Double.parseDouble(xyParts[1].trim());
                             
                             // Next, find the radius substring
-                            // e.g., after "Radius: "
                             int radiusIndex = line.indexOf("Radius:");
                             if (radiusIndex > 0) {
                                 String radiusStr = line.substring(radiusIndex + 7).trim(); // "10.0"
