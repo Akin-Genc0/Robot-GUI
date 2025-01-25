@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" additionalparam=" --module-path C:\javafx-sdk-22\lib --add-modules javafx.controls,javafx.fxml " author="true" classpath="C:\fx\javafx\javafx-sdk-23.0.1\lib\javafx.controls.jar;C:\fx\javafx\javafx-sdk-23.0.1\lib\javafx-swt.jar;C:\fx\javafx\javafx-sdk-23.0.1\lib\javafx.media.jar;C:\Users\akinb\Downloads\eclipse-java-2024-06-R-win32-x86_64\eclipse\plugins\org.eclipse.fx.ide.css.jfx8_3.8.0.202204150904.jar;C:\fx\javafx\javafx-sdk-23.0.1\lib\javafx.graphics.jar;C:\fx\javafx\javafx-sdk-23.0.1\lib\javafx.base.jar;C:\fx\javafx\javafx-sdk-23.0.1\lib\javafx.web.jar;C:\fx\javafx\javafx-sdk-23.0.1\lib\javafx.fxml.jar;C:\fx\javafx\javafx-sdk-23.0.1\lib\javafx.swing.jar" destdir="JavaDoc" doctitle="Robot-GUI" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="application" source="22" sourcefiles="src/module-info.java" sourcepath="src" splitindex="true" use="true" version="true"/>
+    </target>
+</project>

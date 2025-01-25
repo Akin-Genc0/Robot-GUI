@@ -1,10 +1,15 @@
 package application;
 
+import java.util.List;
+
 /**
  * Represents an advanced robot that inherits from BasicRobot.
  * This robot has enhanced movement capabilities and displays wheels based on its movement.
  */
 public class AdvancedRobot extends BasicRobot {
+
+    // Tracks whether the robot is selected by the user
+    private boolean isSelected = false;
 
     /**
      * Constructor for the AdvancedRobot.
@@ -15,11 +20,12 @@ public class AdvancedRobot extends BasicRobot {
      * @param i Initial angle of the robot.
      * @param j Initial speed of the robot.
      */
-    AdvancedRobot(double ix, double iy, double ir, int i, int j) {
-        super(ix, iy, ir, i, j);  // Call the constructor of BasicRobot
+   
 
-        // Change the color of the robot to indicate it's an advanced version
-        this.col = 'g';   
+    public AdvancedRobot(double x, double y, double rad, int angle, int speed) {
+        super(x, y, rad, angle, speed);
+        this.col = 'g'; 
+        System.out.println("AdvancedRobot created at: (" + x + ", " + y + ")");
     }
 
     /**
@@ -86,44 +92,48 @@ public class AdvancedRobot extends BasicRobot {
     }
 
     /**
-     * Helper method to check if the robot is about to bump into something (simple bump sensors).
-     * 
-     * @param xLimit The maximum x-coordinate boundary.
-     * @param yLimit The maximum y-coordinate boundary.
-     * @return true if the robot detects a collision, false otherwise.
+     * Selects the robot, allowing for movement and deletion.
      */
-    public boolean sensorSeesObstacle(double xLimit, double yLimit) {
-        // Simple bump sensor: checks if the robot hits the arena boundaries
-        if (x - rad < 0 || x + rad > xLimit || y - rad < 0 || y + rad > yLimit) {
-            return true; // It hit a wall
+    public void select() {
+        isSelected = true;
+    }
+
+    /**
+     * Deselects the robot.
+     */
+    public void deselect() {
+        isSelected = false;
+    }
+
+    /**
+     * Checks if the robot is selected.
+     * 
+     * @return true if the robot is selected, false otherwise.
+     */
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    /**
+     * Moves the robot to a specified position if it is selected.
+     * 
+     * @param newX The new x-coordinate.
+     * @param newY The new y-coordinate.
+     */
+    public void moveTo(double newX, double newY) {
+        if (isSelected) {
+            this.x = newX;
+            this.y = newY;
         }
-        return false;
     }
 
     /**
-     * Adjusts the robot's angle and position if there’s a collision with the boundary or another robot.
+     * Deletes the robot from the list.
      * 
-     * @param r The RobotArena object that contains all the robots and obstacles.
+     * @param robotList The list of robots in the simulation.
      */
-    @Override
-    protected void adjustRobot(RobotArena r) {
-        // Adjust angle and position if there’s a collision with boundary or robot
-        bAngle = r.CheckRobotAngle(x, y, rad, bAngle, robotID);
-
-        // Adjust position based on the new angle after the check
-        double radAngle = Math.toRadians(bAngle);
-        x += bSpeed * Math.cos(radAngle);
-        y += bSpeed * Math.sin(radAngle);
-    }
-
-    /**
-     * Returns the string representation of the robot type.
-     * 
-     * @return A string indicating this is an "AdvancedRobot".
-     */
-    @Override
-    protected String getStrType() {
-        return "AdvancedRobot"; 
+    public void deleteRobot(List<AdvancedRobot> robotList) {
+        robotList.remove(this);
     }
 
     /**
@@ -138,7 +148,45 @@ public class AdvancedRobot extends BasicRobot {
         if (y - rad < 0)       y = rad;
         if (y + rad > yLimit)  y = yLimit - rad;
     }
+
+    /**
+     * Helper method to check if the robot is about to bump into something (simple bump sensors).
+     * 
+     * @param xLimit The maximum x-coordinate boundary.
+     * @param yLimit The maximum y-coordinate boundary.
+     * @return true if the robot detects a collision, false otherwise.
+     */
+    public boolean sensorSeesObstacle(double xLimit, double yLimit) {
+        return x - rad < 0 || x + rad > xLimit || y - rad < 0 || y + rad > yLimit;
+    }
+
+    /**
+     * Adjusts the robot's angle and position if there’s a collision with the boundary or another robot.
+     * 
+     * @param r The RobotArena object that contains all the robots and obstacles.
+     */
+    @Override
+    protected void adjustRobot(RobotArena r) {
+        bAngle = r.CheckRobotAngle(x, y, rad, bAngle, robotID);
+        double radAngle = Math.toRadians(bAngle);
+        x += bSpeed * Math.cos(radAngle);
+        y += bSpeed * Math.sin(radAngle);
+    }
+
+    /**
+     * Returns the string representation of the robot type.
+     * 
+     * @return A string indicating this is an "AdvancedRobot".
+     */
+    @Override
+    protected String getStrType() {
+        return "AdvancedRobot"; 
+    }
+    
+    
 }
+
+
 
 
 

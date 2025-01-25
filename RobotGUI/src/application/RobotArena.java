@@ -121,12 +121,18 @@ public class RobotArena {
 
         for (Robot r : allRobots) {
             r.drawRobot(mc);
+
+            // Highlight the selected robot with a red border
+            if (r instanceof AdvancedRobot && ((AdvancedRobot) r).isSelected()) {
+                mc.showCircle(r.getX(), r.getY(), r.getRad() + 5, 'r');  // Highlight selection
+            }
         }
 
         for (Obstacle obs : obstacles) {
             obs.drawObstacle(mc);
         }
     }
+
 
     /**
      * Provides descriptions of all robots in the arena.
@@ -296,5 +302,24 @@ public class RobotArena {
     public void removeObstacle(Obstacle selectedObstacle) {
         // TODO Auto-generated method stub
     }
+    
+    /**
+     * Gets all robots that are instances of AdvancedRobot.
+     * 
+     * @return A list of AdvancedRobot objects.
+     */
+    public ArrayList<AdvancedRobot> getAllAdvancedRobots() {
+        ArrayList<AdvancedRobot> advRobots = new ArrayList<>();
+        for (Robot r : allRobots) {
+            if (r instanceof AdvancedRobot) {
+                advRobots.add((AdvancedRobot) r);
+            }
+        }
+        return advRobots;
+    }
+
+	
 }
+
+
 

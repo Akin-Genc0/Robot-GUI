@@ -38,6 +38,7 @@ public class RobotInterface extends Application {
 	private UserControlledRobot userControlledRobot;
 	private KillerRobot killerRobot;
 	private ArenaSizeAdjuster sizeAdjuster;
+	private Robot selectedRobot = null;
 
 	/**
 	 * Displays information about the program in an About dialog.
@@ -45,23 +46,64 @@ public class RobotInterface extends Application {
 	private void showAbout() {
 	    Alert alert = new Alert(AlertType.INFORMATION);
 	    alert.setTitle("About");
-	    alert.setHeaderText(null);
-	    alert.setContentText("Akin's JavaFX Demonstrator");
+	    alert.setHeaderText("How to Use the Robot Simulation");
+
+	    // Shortened instructions text
+	    alert.setContentText(
+	        "This simulation allows you to interact with robots in an arena. Here's how to use it:\n\n"
+	        + "1. **Start/Stop Simulation**: Click 'Start' to begin, 'Pause' to stop.\n"
+	        + "2. **Add Robots**: Use the buttons to add different types of robots: Basic, Advanced, User-Controlled, Killer, or Teleporting.\n"
+	        + "3. **Interact with the Arena**: Add obstacles, toggle terrain, or resize the arena.\n"
+	        + "4. **Save/Load**: Save the current state of the simulation and load it later.\n\n"
+	        + "Experiment with different settings and watch how robots react!"
+	    );
+	    
+	    // Increase window size
+	    alert.getDialogPane().setPrefSize(600, 400);
+	    
+	    // Show alert
 	    alert.showAndWait();
+	
 	}
 	
-	/**
-	 * Displays instructions for using the program in an Information dialog.
-	 */
-	private void showInfo() {
-	    Alert alert = new Alert(AlertType.INFORMATION);
-	    alert.setTitle("About");
-	    alert.setHeaderText(null);
-	    alert.setContentText("There are two types of robots in this simulation. The first type, "
-	    		+ "Basic Robots, has simple movement behavior: they move around and change direction when they "
-	    		+ "hit a wall or another robot. You can add them by clicking the \"Add Basic Robot\" button.");
-	    alert.showAndWait();
+	 
+	
+
+	private void handleMouseClick(MouseEvent event) {
+	    double mouseX = event.getX();
+	    double mouseY = event.getY();
+
+	    System.out.println("Mouse clicked at: (" + mouseX + ", " + mouseY + ")");
+
+	    boolean robotFound = false;
+
+	    for (Robot robot : arena.getAllRobots()) { 
+	        double robotX = robot.getX();
+	        double robotY = robot.getY();
+	        double robotRadius = robot.getRad();
+
+	        double distance = Math.sqrt(Math.pow(robotX - mouseX, 2) + Math.pow(robotY - mouseY, 2));
+
+	        if (distance <= robotRadius) {
+	            selectedRobot = robot;
+	            robotFound = true;
+	            System.out.println("Robot selected at: (" + robotX + ", " + robotY + ")");
+	            break;
+	        }
+	    }
+
+	    if (!robotFound) {
+	        selectedRobot = null;
+	        System.out.println("No robot selected.");
+	    }
+
+	    drawWorld();  // Refresh canvas to highlight selected robot
 	}
+
+	
+	
+
+
 
 	/**
 	 * Sets up the menu bar for the GUI.
@@ -82,7 +124,7 @@ public class RobotInterface extends Application {
 		
 		Menu mHelp = new Menu("Help");
 		MenuItem mAbout = new MenuItem("About");
-		MenuItem minfo = new MenuItem("Instructions");
+		 
 		mAbout.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -90,13 +132,8 @@ public class RobotInterface extends Application {
             }	
 		});
 		
-		minfo.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-            	showInfo();
-            }	
-		});
-		mHelp.getItems().addAll(mAbout, minfo);
+	 
+		mHelp.getItems().addAll(mAbout);
 		 
 		menuBar.getMenus().addAll(mFile, mHelp);
 		return menuBar;
@@ -223,6 +260,49 @@ public class RobotInterface extends Application {
 	            drawWorld();
 	        }
 	    });
+	    
+	    
+	    
+        Button btnDelete = new Button("Delete Selected Robot");
+        btnDelete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (selectedRobot != null) {
+                    arena.removeRobot(selectedRobot);
+                    System.out.println("Robot deleted.");
+                    selectedRobot = null;  // Clear selection after deletion
+                    drawWorld();
+                } else {
+                    System.out.println("No robot selected.");
+                }
+            }
+        });
+
+        TextField moveXField = new TextField();
+        moveXField.setPromptText("X position");
+
+        TextField moveYField = new TextField();
+        moveYField.setPromptText("Y position");
+
+        Button btnMove = new Button("Move Selected Robot");
+        btnMove.setOnAction(event -> {
+            if (selectedRobot != null) {
+                try {
+                    double newX = Double.parseDouble(moveXField.getText());
+                    double newY = Double.parseDouble(moveYField.getText());
+
+                    selectedRobot.setXY(newX, newY);
+                    
+
+                    System.out.println("Moved robot to: (" + newX + ", " + newY + ")");
+                    drawWorld();
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter numeric values.");
+                }
+            } else {
+                System.out.println("No robot selected to move.");
+            }
+        });
 
 	    TextField widthField = new TextField();
 	    widthField.setPromptText("Enter new width");
@@ -249,33 +329,44 @@ public class RobotInterface extends Application {
 
 	    HBox resizeControls = new HBox(5, widthField, heightField, btnResizeArena);
 	  
-	    HBox rowRun = new HBox(5, 
-		        new Label("Run: "), 
-		        btnStart, 
-		        btnStop,
-		        btnToggleMaze,
-		        btnAddTeleportingRobot
-		    );
-	    HBox rowArena = new HBox(5, 
-		        new Label("Change: "), 
-		        btnResizeArena,
-		        resizeControls
-		    );
-		    HBox rowAdd = new HBox(5, 
-		        new Label("Add: "), 
-		        btnAdd, 
-		        btnAddR, 
-		        btnAddOps,
-		        btnSave, 
-		        btnLoad, 
-		        btnKillerRobot,
-		        btnUserRobot
-		    );
-		    
-		    VBox vbox = new VBox(10, rowArena, rowRun, rowAdd);
-		    vbox.setAlignment(Pos.CENTER_LEFT);
+	    HBox rowRun = new HBox(10,  // Increased spacing between elements
+	            new Label("Run: "), 
+	            btnStart, 
+	            btnStop,
+	            btnToggleMaze,
+	            btnAddTeleportingRobot,
+	            btnDelete
+	           
+	    );
 
-		    return vbox;
+	    
+
+	    HBox rowArena = new HBox(10, 
+	            new Label("Change: "), 
+	            btnResizeArena,
+	            resizeControls,
+	            btnMove,
+	            moveXField,
+	            moveYField
+	    );
+
+	    HBox rowAdd = new HBox(10, 
+	            new Label("Add: "), 
+	            btnAdd, 
+	            btnAddR, 
+	            btnAddOps,
+	            btnSave, 
+	            btnLoad, 
+	            btnKillerRobot,
+	            btnUserRobot
+	    );
+
+	    // Add more padding and spacing for better structure
+	    VBox vbox = new VBox(20, rowArena, rowRun, rowAdd);
+	    vbox.setPadding(new Insets(20));
+	    vbox.setAlignment(Pos.CENTER_LEFT);
+
+	    return vbox;
 	}
 	
 
@@ -312,17 +403,18 @@ public class RobotInterface extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 	    primaryStage.setTitle("Akin Robot GUI");
+
 	    BorderPane bp = new BorderPane();
 	    bp.setPadding(new Insets(10, 20, 10, 20));
 	    bp.setBottom(setButtons());
 	    bp.setTop(setMenu());
 
 	    Group root = new Group();
-	    Canvas canvas = new Canvas(400, 500);
+	    Canvas canvas = new Canvas(800, 600);  // Increase canvas size
 	    root.getChildren().add(canvas);
-	    bp.setLeft(root);
 
-	    mc = new MyCanvas(canvas.getGraphicsContext2D(), 600, 500);
+	    canvas.setOnMouseClicked(this::handleMouseClick);
+	    mc = new MyCanvas(canvas.getGraphicsContext2D(), 800, 600);
 
 	    timer = new AnimationTimer() {
 	        public void handle(long currentNanoTime) {
@@ -332,28 +424,55 @@ public class RobotInterface extends Application {
 	        }
 	    };
 	    timer.start();
-	    arena = new RobotArena(400, 500);
+	    arena = new RobotArena(800, 600);
 	    drawWorld();
 
 	    rtPane = new VBox();
 	    rtPane.setAlignment(Pos.TOP_LEFT);
-	    rtPane.setPadding(new Insets(5, 75, 75, 5));
+	    rtPane.setPadding(new Insets(20, 50, 20, 50));
 	    bp.setRight(rtPane);
 
-	    Scene scene = new Scene(bp, 700, 600);
+	    Scene scene = new Scene(bp, 1200, 800);  // Increase window size for better view
 	    bp.prefHeightProperty().bind(scene.heightProperty());
 	    bp.prefWidthProperty().bind(scene.widthProperty());
-
-	    scene.setOnKeyPressed(event -> {
-	        if (userControlledRobot != null) {
-	            userControlledRobot.direction(event.getText());
-	        }
-	    });
+	    bp.setCenter(root);  // Move the arena canvas to the center
 
 	    primaryStage.setScene(scene);
+	    primaryStage.setMinWidth(1000);
+	    primaryStage.setMinHeight(750);
 	    primaryStage.show();
+
+	    // Fix keyboard controls for selected robot movement
+	    scene.setOnKeyPressed(event -> {
+	        if (selectedRobot != null) {
+	            switch (event.getCode()) {
+	                case UP:
+	                    selectedRobot.setXY(selectedRobot.getX(), selectedRobot.getY() - 10);
+	                    break;
+	                case DOWN:
+	                    selectedRobot.setXY(selectedRobot.getX(), selectedRobot.getY() + 10);
+	                    break;
+	                case LEFT:
+	                    selectedRobot.setXY(selectedRobot.getX() - 10, selectedRobot.getY());
+	                    break;
+	                case RIGHT:
+	                    selectedRobot.setXY(selectedRobot.getX() + 10, selectedRobot.getY());
+	                    break;
+	                default:
+	                    break;
+	            }
+	            drawWorld();  // Update the canvas to reflect movement
+	        } else {
+	            System.out.println("No robot selected to move.");
+	        }
+	    });
 	}
 
+
+	
+	
+	
+	
 	public static void main(String[] args) {
 	    Application.launch(args);
 	}
