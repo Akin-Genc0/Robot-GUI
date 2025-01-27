@@ -9,7 +9,7 @@ public class UserControlledRobot extends BasicRobot {
     private Direction currentDirection;
 
     /**
-     * Constructor to initialize a UserControlledRobot with the specified position, radius, angle, and speed.
+     * Constructor to initialise a UserControlledRobot with the specified position, radius, angle, and speed.
      * 
      * @param ix The initial x-coordinate of the robot.
      * @param iy The initial y-coordinate of the robot.
@@ -19,7 +19,7 @@ public class UserControlledRobot extends BasicRobot {
      */
     UserControlledRobot(double ix, double iy, double ir, int i, int j) {
         super(ix, iy, ir, i, j);
-        this.col = 'y';  // Set the color of the robot
+        this.col = 'y';  // Set the colour of the robot
     }
 
     /**

@@ -326,6 +326,8 @@ public class RobotInterface extends Application {
 	            }
 	        }
 	    });	
+	    
+	    
 
 	    HBox resizeControls = new HBox(5, widthField, heightField, btnResizeArena);
 	  
