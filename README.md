@@ -1,6 +1,6 @@
 # Robot Arena Simulation
 
-This **JavaFX GUI application** simulates robots navigating a virtual arena. Users can add, control, and interact with various types of robots, each with unique behaviors, and observe how they respond to obstacles and other entities in real time.
+This **JavaFX GUI application** simulates robots navigating a virtual arena. Users can add, control, and interact with various types of robots, each with unique behaviours, and observe how they respond to obstacles and other entities in real time.
 
 ## Features
 
@@ -23,4 +23,9 @@ This **JavaFX GUI application** simulates robots navigating a virtual arena. Use
 - **Java 8** or higher
 - **JavaFX SDK** (if not bundled with your JDK)
 
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Akin-Genc0/Robot-GUI.git
 
